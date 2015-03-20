@@ -38,24 +38,31 @@ const (
 )
 
 const (
-	AMF3_UNDEFINED_MARKER = 0x00
-	AMF3_NULL_MARKER      = 0x01
-	AMF3_FALSE_MARKER     = 0x02
-	AMF3_TRUE_MARKER      = 0x03
-	AMF3_INTEGER_MARKER   = 0x04
-	AMF3_DOUBLE_MARKER    = 0x05
-	AMF3_STRING_MARKER    = 0x06
-	AMF3_XMLDOC_MARKER    = 0x07
-	AMF3_DATE_MARKER      = 0x08
-	AMF3_ARRAY_MARKER     = 0x09
-	AMF3_OBJECT_MARKER    = 0x0a
-	AMF3_XMLSTRING_MARKER = 0x0b
-	AMF3_BYTEARRAY_MARKER = 0x0c
+	AMF3_UNDEFINED_MARKER     = 0x00
+	AMF3_NULL_MARKER          = 0x01
+	AMF3_FALSE_MARKER         = 0x02
+	AMF3_TRUE_MARKER          = 0x03
+	AMF3_INTEGER_MARKER       = 0x04
+	AMF3_DOUBLE_MARKER        = 0x05
+	AMF3_STRING_MARKER        = 0x06
+	AMF3_XMLDOC_MARKER        = 0x07
+	AMF3_DATE_MARKER          = 0x08
+	AMF3_ARRAY_MARKER         = 0x09
+	AMF3_OBJECT_MARKER        = 0x0a
+	AMF3_XMLSTRING_MARKER     = 0x0b
+	AMF3_BYTEARRAY_MARKER     = 0x0c
+	AMF3_VECTOR_INT_MARKER    = 0x0d
+	AMF3_VECTOR_UINT_MARKER   = 0x0e
+	AMF3_VECTOR_DOUBLE_MARKER = 0x0f
+	AMF3_VECTOR_OBJECT_MARKER = 0x10
+	AMF3_DICTIONARY_MARKER    = 0x11
 )
 
 type ExternalHandler func(*Decoder, io.Reader) (interface{}, error)
 
 type Decoder struct {
+	// If set to true, decoded doubles that are NaN or Inf will be stored as 0
+	FilterNaNs       bool
 	refCache         []interface{}
 	stringRefs       []string
 	objectRefs       []interface{}
@@ -80,6 +87,11 @@ type Version uint8
 
 type Array []interface{}
 type Object map[string]interface{}
+type Dictionary map[interface{}]interface{}
+type ObjectVector struct {
+	Type string
+	Data Array
+}
 
 type TypedObject struct {
 	Type   string

@@ -93,3 +93,13 @@ func AssertMarker(r io.Reader, checkMarker bool, m byte) error {
 
 	return nil
 }
+
+func (d Dictionary) MarshalJSON() ([]byte, error) {
+	// This is inefficient and wrong, but works for most use cases
+	normalized := map[string]interface{}{}
+	for k, v := range d {
+		ks := fmt.Sprint(k)
+		normalized[ks] = v
+	}
+	return json.Marshal(normalized)
+}
